@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="display-6 fw-bold">Статьи</h1>
+  {% if user.is_authenticated %}
+  <a href="{% url 'article_create' %}" class="btn btn-apple">+ Новая</a>
+  {% endif %}
+</div>
+
+{% if articles %}
+<div class="row g-4">
+  {% for article in articles %}
+  <div class="col-md-6">
+    <div class="article-card p-4 h-100">
+      <h5 class="fw-bold">{{ article.title }}</h5>
+      <p class="text-muted mb-3">
+        {{ article.content|truncatewords:30 }}
+      </p>
+      <div class="d-flex justify-content-between align-items-center mt-auto">
+        <small class="text-muted">
+          {{ article.author }} • {{ article.created_at|date:"d.m.Y" }}
+        </small>
+        <a href="{% url 'article_detail' article.pk %}" class="btn btn-sm btn-outline-secondary">
+          Читать →
+        </a>
+      </div>
+      {% if user == article.author %}
+      <div class="mt-3">
+        <a href="{% url 'article_edit' article.pk %}" class="btn btn-sm btn-outline-primary">
+          Редактировать
+        </a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% if is_paginated %}
+<nav class="mt-5">
+  <ul class="pagination justify-content-center">
+    {% if page_obj.has_previous %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{ page_obj.previous_page_number }}">←</a>
+    </li>
+    {% endif %}
+
+    <li class="page-item disabled">
+      <span class="page-link">
+        Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+      </span>
+    </li>
+
+    {% if page_obj.has_next %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{ page_obj.next_page_number }}">→</a>
+    </li>
+    {% endif %}
+  </ul>
+</nav>
+{% endif %}
+{% else %}
+<div class="text-center py-5">
+  <h3 class="text-muted">Пока нет статей</h3>
+  {% if user.is_authenticated %}
+  <p class="mt-3">
+    <a href="{% url 'article_create' %}" class="btn btn-apple">Написать первую статью</a>
+  </p>
+  {% endif %}
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<article class="card border-0 bg-white">
+  <div class="card-body p-5">
+    <header class="mb-5">
+      <h1 class="display-5 fw-bold mb-3">{{ article.title }}</h1>
+      <div class="d-flex align-items-center text-muted">
+        <span class="me-3">Автор: {{ article.author }}</span>
+        <span>•</span>
+        <span class="ms-3">{{ article.created_at|date:"d E Y, H:i" }}</span>
+      </div>
+      {% if article.updated_at != article.created_at %}
+      <small class="text-muted">(обновлено {{ article.updated_at|date:"d.m.Y" }})</small>
+      {% endif %}
+    </header>
+
+    <div class="article-content mt-4">
+      {{ article.content|linebreaks }}
+    </div>
+
+    {% if user == article.author %}
+    <div class="mt-5 pt-4 border-top">
+      <a href="{% url 'article_edit' article.pk %}" class="btn btn-outline-primary">
+        Редактировать
+      </a>
+    </div>
+    {% endif %}
+  </div>
+</article>
+
+<div class="mt-4 text-end">
+  <a href="{% url 'article_list' %}" class="btn btn-outline-secondary">
+    ← Назад к списку
+  </a>
+</div>
+{% endblock %}
