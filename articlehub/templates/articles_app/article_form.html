@@ -13,14 +13,19 @@
       {{ form|crispy }}
 
       <div class="d-flex justify-content-between mt-5">
-        <a href="{% url 'article_list' %}" class="btn btn-outline-secondary">
-          Отмена
-        </a>
-        <button type="submit" class="btn btn-apple px-4">
-          {% if object %}Сохранить{% else %}Опубликовать{% endif %}
-        </button>
+        <div>
+          <a href="{% url 'article_list' %}" class="btn btn-outline-secondary">Отмена</a>
+        </div>
+        <div>
+          {% if object %}
+          <a href="{% url 'article_delete' object.pk %}" class="btn btn-outline-danger ms-2">
+            Удалить статью
+          </a>
+          {% endif %}
+          <button type="submit" class="btn btn-apple px-4">
+            {% if object %}Сохранить{% else %}Опубликовать{% endif %}
+          </button>
+        </div>
       </div>
-    </form>
   </div>
-</div>
-{% endblock %}
+  {% endblock %}

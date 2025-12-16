@@ -1,5 +1,12 @@
-from django.views.generic import ListView, CreateView, UpdateView, DetailView
+from django.views.generic import (
+    ListView,
+    CreateView,
+    UpdateView,
+    DetailView,
+    DeleteView,
+)
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from .models import Article
 from .forms import ArticleForm
@@ -37,3 +44,12 @@ class ArticleUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_queryset(self):
         return Article.objects.filter(author=self.request.user)
+
+
+class ArticleDeleteView(LoginRequiredMixin, DeleteView):
+    model = Article
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()
+        return redirect("article_list")
